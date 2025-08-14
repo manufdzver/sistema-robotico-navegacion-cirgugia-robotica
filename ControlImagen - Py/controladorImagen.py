@@ -55,7 +55,7 @@ def consumirImagenActual():
                 decodedImg.write(base64.b64decode((byte)))
 
             print(" [x] Received ")
-            # Call find_y_centroid and handle potential errors
+            # Call find_y_centroid 
             try:
                 centroid_actual, error_actual = find_y_centroid('img/imgRecuperada.png', (r_yellow, g_yellow, b_yellow))
                 #centroid_deseada, error_deseada = find_y_centroid('img/imgDeseada.png', (r_yellow, g_yellow, b_yellow))
@@ -179,7 +179,7 @@ def find_y_centroid(image_path, rgbColor):
     largest_area = 0
     for i in range(1, num_labels):  # Start from 1 to skip background
         area = stats[i, cv2.CC_STAT_AREA]
-        # Checkar que el area sea circular, antes de usarla como candidato a
+        # Checar que el area sea circular, antes de usarla como candidato a
         x, y, w, h, _ = stats[i]  # (x,y) es bounding box, w,h es width and height
         if is_circular(w, h, area):
             if area > largest_area:
@@ -222,13 +222,10 @@ def find_y_centroid(image_path, rgbColor):
 def rgb_to_hsv(rgb_color):
     """Converts an RGB color tuple to HSV."""
 
-    # Convert RGB to a NumPy array (OpenCV expects a NumPy array)
-    rgb = np.uint8([[list(rgb_color)]])  # Note: OpenCV uses BGR, not RGB!
+    rgb = np.uint8([[list(rgb_color)]]) 
 
-    # Convert to HSV
-    hsv = cv2.cvtColor(rgb, cv2.COLOR_RGB2HSV)  # Or cv2.COLOR_BGR2HSV if you got BGR from paint
+    hsv = cv2.cvtColor(rgb, cv2.COLOR_RGB2HSV)
 
-    # Extract the HSV values
     hue = hsv[0][0][0]
     saturation = hsv[0][0][1]
     value = hsv[0][0][2]
@@ -237,18 +234,6 @@ def rgb_to_hsv(rgb_color):
 
 
 def is_circular(width, height, area, tolerance=0.2):
-    """
-    Checks if a shape is approximately circular based on its width, height, and area.
-
-    Args:
-        width: The width of the shape.
-        height: The height of the shape.
-        area: The area of the shape.
-        tolerance: The tolerance for the circularity check (default: 0.2).
-
-    Returns:
-        True if the shape is approximately circular, False otherwise.
-    """
     if width == 0 or height == 0:
         return False
 
@@ -257,7 +242,7 @@ def is_circular(width, height, area, tolerance=0.2):
     if aspect_ratio < 1 - tolerance or aspect_ratio > 1 + tolerance:
         return False
 
-    # Check if the area is approximately equal to the area of a circle with radius = width/2
+    # Checar si area es cercanamente iga¿ual a un circulo de radius = width/2
     radius = width / 2.0
     expected_area = math.pi * radius * radius
     area_ratio = float(area) / expected_area
@@ -276,23 +261,22 @@ def publicarError(pa, pd):
         channel = connection.channel()
         channel.queue_declare(queue='error')
         """
-        # Prepare the data to be sent
+        # Prepara data a mandar
         data_to_send = [pa[0], pa[1], pd[0], pd[1]]
         message = str(data_to_send)  # Convert the array to a string
 
-        # Publish the data
+        # Publicar data
         """
         channel.basic_publish(exchange='', routing_key='error', body=message)
         print(f"Sent error data: {data_to_send} to Queue")
         """
-        # Write the data to a file
+        # Escribir en un file
         file_path = 'img/error_data.txt'
-        # Check if the file exists
+       
         if not os.path.exists(file_path):
-            # Create the file if it doesn't exist
+            # Crear el file si no existe
             with open(file_path, 'w') as file:
-                file.write("Centroid Data:\n")  # Add a header if creating a new file
-
+                file.write("Centroid Data:\n")  
         with open(file_path, 'a') as file:
             file.write(message + "\n")
 
