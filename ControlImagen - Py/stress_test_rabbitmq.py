@@ -4,11 +4,9 @@ import numpy as np
 import sys
 import threading
 
-# --- Configuración de la Prueba ---
 RABBITMQ_HOST = 'localhost'
 NUM_SOLICITUDES = 1000
-# Se han eliminado los casos de 100k y 1M de colas, ya que pueden causar inestabilidad o consumir excesivos recursos.
-# Si deseas, puedes volver a agregarlos a la lista.
+
 CONFIG_COLAS = [1, 10, 50, 100, 200, 300, 400, 500, 1000, 10000]
 MENSAJE_DUMMY = b'payload_prueba_estres'
 
@@ -24,7 +22,6 @@ def stress_worker(queue_name, num_requests, host, result_list, index):
         parametros = pika.ConnectionParameters(host=host)
         connection = pika.BlockingConnection(parametros)
         channel = connection.channel()
-        # La cola se asume pre-declarada por el hilo principal.
 
         for _ in range(num_requests):
             tiempo_inicio = time.perf_counter()
@@ -42,7 +39,6 @@ def stress_worker(queue_name, num_requests, host, result_list, index):
     finally:
         if connection and connection.is_open:
             connection.close()
-        # Almacena los resultados en la lista compartida en el índice designado
         result_list[index] = (latencies, success_count)
 
 def ejecutar_prueba_estres(num_colas, num_solicitudes):
@@ -196,4 +192,5 @@ def main():
     graficar_resultados(todos_los_resultados)
 
 if __name__ == '__main__':
+
     main()
