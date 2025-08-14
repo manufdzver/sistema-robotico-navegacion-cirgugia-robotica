@@ -134,13 +134,13 @@ def find_y_centroid(image_path, rgbColor):
 def rgb_to_hsv(rgb_color):
     """Converts an RGB color tuple to HSV."""
 
-    # Convert RGB to a NumPy array (OpenCV expects a NumPy array)
+    # Convertir RGB a NumPy array 
     rgb = np.uint8([[list(rgb_color)]])  # Note: OpenCV uses BGR, not RGB!
 
-    # Convert to HSV
-    hsv = cv2.cvtColor(rgb, cv2.COLOR_RGB2HSV)  # Or cv2.COLOR_BGR2HSV if you got BGR from paint
+    # Convertir a HSV
+    hsv = cv2.cvtColor(rgb, cv2.COLOR_RGB2HSV)  
 
-    # Extract the HSV values
+    # Extraer HSV
     hue = hsv[0][0][0]
     saturation = hsv[0][0][1]
     value = hsv[0][0][2]
@@ -148,27 +148,16 @@ def rgb_to_hsv(rgb_color):
     return hue, saturation, value
 
 def is_circular(width, height, area, tolerance=0.2):
-    """
-    Checks if a shape is approximately circular based on its width, height, and area
 
-    Args:
-        width: The width of the shape.
-        height: The height of the shape.
-        area: The area of the shape.
-        tolerance: The tolerance for the circularity check (default: 0.2).
-
-    Returns:
-        True if the shape is approximately circular, False otherwise.
-    """
     if width == 0 or height == 0:
         return False
 
-    # Checkar que width y height son aproximadamente igual mas menos toleranica en %
+    # Checar que width y height son aproximadamente igual mas menos toleranica en %
     aspect_ratio = float(width) / height
     if aspect_ratio < 1 - tolerance or aspect_ratio > 1 + tolerance:
         return False
 
-    # Check if the area is approximately equal to the area of a circle with radius = width/2
+    # Checar si la area de un circulo con radius = width/2
     radius = width / 2.0
     expected_area = math.pi * radius * radius
     area_ratio = float(area) / expected_area
@@ -181,3 +170,4 @@ if __name__ == '__main__':
     imagenDeseada()
     find_y_centroid("img/imgDeseada.png", (r_yellow, g_yellow, b_yellow))
     print("Finished calibrating")
+
